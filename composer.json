@@ -1,0 +1,20 @@
+{
+    "name": "ahsanshaheen199/wp-react-contact-book",
+    "description": "This is WordPress contact book plugin built on react",
+    "license": "GPLV2",
+    "authors": [
+        {
+            "name": "Ahsan Habib Shaheen",
+            "email": "ahsanshaheen199@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "tareq1988/wp-eloquent": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "WPRCB\\": "includes/"
+        }
+    }
+}

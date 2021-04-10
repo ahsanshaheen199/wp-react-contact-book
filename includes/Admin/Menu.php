@@ -34,6 +34,11 @@ class Menu
         if ($hook === 'toplevel_page_wprcb') {
             wp_enqueue_script('wprcb-admin', WPRCB_ASSETS_URL . 'build/index.js', $assetBuildPath['dependencies'], $assetBuildPath['version'], true);
 
+            wp_localize_script('wprcb-admin', 'wprcbData', [
+                'nonce' => wp_create_nonce('wp_rest'),
+                'apiUrl' => rest_url()
+            ]);
+
             wp_enqueue_style('wprcb-admin', WPRCB_ASSETS_URL . 'build/index.css');
         }
     }

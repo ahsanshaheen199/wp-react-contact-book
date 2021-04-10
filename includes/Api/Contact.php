@@ -99,7 +99,6 @@ class Contact extends WP_REST_Controller
 
     public function permissionCheck()
     {
-        return true;
         if (!current_user_can('manage_options')) {
             return new WP_Error(
                 'rest_forbidden',
@@ -107,5 +106,7 @@ class Contact extends WP_REST_Controller
                 array('status' => rest_authorization_required_code())
             );
         }
+
+        return true;
     }
 }

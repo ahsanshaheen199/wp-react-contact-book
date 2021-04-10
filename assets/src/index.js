@@ -1,17 +1,22 @@
 import { render } from '@wordpress/element';
-import { Header } from './components/Header';
-import { Table } from './components/Table';
 import { HashRouter, Route, Switch } from 'react-router-dom';
+import { AddContact } from './pages/AddContact';
+import { ContactListPage } from './pages/index';
+import { NotFound } from './pages/NotFound';
 import './index.css';
+import { ContactProvider } from './context/ContactContext';
 
 const App = () => {
 	return (
 		<>
 			<HashRouter>
-				<Switch>
-					<Route path='/' exact component={Table} />
-					<Route path='/edit' component={Header} />
-				</Switch>
+				<ContactProvider>
+					<Switch>
+						<Route path='/' exact component={ContactListPage} />
+						<Route path='/add' component={AddContact} />
+						<Route path='*' exact component={NotFound} />
+					</Switch>
+				</ContactProvider>
 			</HashRouter>
 		</>
 	);

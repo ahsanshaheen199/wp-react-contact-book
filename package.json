@@ -1,0 +1,33 @@
+{
+	"name": "wp-react-contact-book",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "wp-scripts start assets/src/index.js --output-path=assets/build",
+		"build": "wp-scripts build assets/src/index.js --output-path=assets/build"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ahsanshaheen199/wp-react-contact-book.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/ahsanshaheen199/wp-react-contact-book/issues"
+	},
+	"homepage": "https://github.com/ahsanshaheen199/wp-react-contact-book#readme",
+	"dependencies": {
+		"@wordpress/data": "^4.27.1",
+		"@wordpress/element": "^2.20.1",
+		"@wordpress/i18n": "^3.19.1"
+	},
+	"devDependencies": {
+		"@tailwindcss/postcss7-compat": "^2.1.0",
+		"@wordpress/scripts": "^14.1.0",
+		"autoprefixer": "^9.8.6",
+		"postcss": "^7.0.35",
+		"tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.0"
+	}
+}

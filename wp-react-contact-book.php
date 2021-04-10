@@ -17,54 +17,60 @@ defined('ABSPATH') || exit;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-final class WP_React_Contact_Book {
+final class WP_React_Contact_Book
+{
     private function __construct()
     {
         $this->defineConstants();
 
-        add_action( 'plugins_loaded', [$this,'pluginLoaded'] );
-        add_action( 'init', [$this,'initPlugin'] );
-        add_action('rest_api_init',[$this,'registerRoute']);
-        register_activation_hook(__FILE__,[$this,'activePlugin']);
+        add_action('plugins_loaded', [$this, 'pluginLoaded']);
+        add_action('init', [$this, 'initPlugin']);
+        add_action('rest_api_init', [$this, 'registerRoute']);
+        register_activation_hook(__FILE__, [$this, 'activePlugin']);
     }
 
-    public function defineConstants() {
-        
+    public function defineConstants()
+    {
+        define('WPRCB_ASSETS_URL', plugin_dir_url(__FILE__) . 'assets/');
+        define('WPRCB_ASSETS_PATH', plugin_dir_path(__FILE__) . 'assets/');
     }
 
-    public static function init() {
+    public static function init()
+    {
         static $instance = false;
 
-        if ( ! $instance ) {
+        if (!$instance) {
             $instance = new self();
         }
 
         return $instance;
     }
 
-    public function pluginLoaded() {
+    public function pluginLoaded()
+    {
         new Menu();
     }
 
-    public function registerRoute() {
+    public function registerRoute()
+    {
         (new Contact)->register_routes();
     }
-    
-    public function initPlugin() {
-        load_plugin_textdomain('wprcb', false, dirname( plugin_basename( __FILE__ ) ) . '/languages');
+
+    public function initPlugin()
+    {
+        load_plugin_textdomain('wprcb', false, dirname(plugin_basename(__FILE__)) . '/languages');
     }
 
-    public function activePlugin() {
+    public function activePlugin()
+    {
         $activator = new Activator();
         $activator->activate();
     }
 }
 
-function wp_react_contact_book() {
+function wp_react_contact_book()
+{
     WP_React_Contact_Book::init();
 }
 
 wp_react_contact_book();
-
-
-

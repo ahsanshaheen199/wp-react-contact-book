@@ -9,12 +9,12 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {
-        "tareq1988/wp-eloquent": "dev-master"
-    },
     "autoload": {
         "psr-4": {
             "WPRCB\\": "includes/"
         }
+    },
+    "require": {
+        "tareq1988/wp-eloquent": "dev-master"
     }
 }

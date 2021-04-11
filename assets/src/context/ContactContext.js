@@ -2,7 +2,7 @@ import { createContext, useReducer } from '@wordpress/element';
 import { ContactReducer } from '../reducer/ContactReducer';
 
 const initialState = {
-	isLoading: true,
+	loading: true,
 	contacts: [],
 };
 

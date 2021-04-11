@@ -1,35 +1,47 @@
 import { __ } from '@wordpress/i18n';
-import { useState } from '@wordpress/element';
+import { useContext, useState } from '@wordpress/element';
+import { ContactContext } from '../context/ContactContext';
+import { addContact } from '../actions/contactActions';
+import { addContactRequest } from '../http/serverRequest';
+import { useHistory } from 'react-router-dom';
 
 export const AddContactForm = () => {
-	const [form, setForm] = useState({
-		fullName: '',
+	const [contact, setContact] = useState({
+		name: '',
 		email: '',
 		phone: '',
 		address: '',
 	});
 
-	const addContact = (e) => {
+	const { state, dispatch } = useContext(ContactContext);
+
+	const history = useHistory();
+
+	const addContactData = (e) => {
 		e.preventDefault();
+		addContactRequest(contact, contactId).then((data) => {
+			dispatch(addContact(contact));
+			history.push('/');
+		});
 	};
 
-	const formData = (e) => {
-		setForm({
-			...form,
+	const contactData = (e) => {
+		setContact({
+			...contact,
 			[e.target.name]: e.target.value,
 		});
 	};
 	return (
 		<div className='bg-white rounded showdow p-6'>
-			<form>
+			<form onSubmit={addContactData}>
 				<div className='mb-4'>
 					<input
 						className='w-full wprcb-input placeholder-gray-500 text-gray-800 font-medium focus:border-blue-600'
 						type='text'
 						placeholder={__('Full Name', 'wprcb')}
 						name='name'
-						value={form.name}
-						onChange={formData}
+						value={contact.name}
+						onChange={contactData}
 					/>
 				</div>
 				<div className='mb-4'>
@@ -40,8 +52,8 @@ export const AddContactForm = () => {
 								type='email'
 								placeholder={__('Email Address', 'wprcb')}
 								name='email'
-								value={form.email}
-								onChange={formData}
+								value={contact.email}
+								onChange={contactData}
 							/>
 						</div>
 						<div className='w-1/2 px-4'>
@@ -50,8 +62,8 @@ export const AddContactForm = () => {
 								type='text'
 								placeholder={__('Phone', 'wprcb')}
 								name='phone'
-								value={form.phone}
-								onChange={formData}
+								value={contact.phone}
+								onChange={contactData}
 							/>
 						</div>
 					</div>
@@ -62,8 +74,8 @@ export const AddContactForm = () => {
 						type='text'
 						placeholder={__('Address', 'wprcb')}
 						name='address'
-						value={form.address}
-						onChange={formData}></textarea>
+						value={contact.address}
+						onChange={contactData}></textarea>
 				</div>
 				<button
 					type='submit'

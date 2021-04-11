@@ -7,7 +7,7 @@ use WP_REST_Server;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
-use WPRCB\Models\Contact as ModelsContact;
+use \WeDevs\ORM\Eloquent\Facades\DB;
 
 class Contact extends WP_REST_Controller
 {
@@ -51,39 +51,44 @@ class Contact extends WP_REST_Controller
             [
                 'methods'   => WP_REST_Server::DELETABLE,
                 'callback'  => [$this, 'destroy'],
-                'permission_callback' => [$this, 'middleware'],
+                'permission_callback' => [$this, 'permissionCheck'],
             ],
         ]);
     }
 
     public function index()
     {
-        $contacts = ModelsContact::all()->toArray();
+        $contacts = DB::table('wprcb_contact_book')->get();
         return new WP_REST_Response(['contacts' => $contacts]);
     }
 
     public function store(WP_REST_Request $request)
     {
-        $contact = new ModelsContact();
         $data = json_decode($request->get_body());
 
+        $contact = DB::table('wprcb_contact_book')->insertGetId(
+            [
+                'name'      => $data->name,
+                'email'     => $data->email,
+                'phone'     => $data->phone,
+                'address'   => $data->address,
+                'created_by' => is_user_logged_in() ? get_current_user_id() : 0,
+            ]
+        );
 
-        $contact->name          = $data->name ?? 'Untitled Name';
-        $contact->email         = $data->email;
-        $contact->phone         = $data->phone;
-        $contact->address       = $data->address;
-        $contact->created_by    = is_user_logged_in() ? get_current_user_id() : 0;
-        $contact->save();
+        if (!$contact) {
+            return new WP_REST_Response(['message'  => __('Can\'t create contact', 'wprcb')], 404);
+        }
 
-        return new WP_REST_Response(['contact' => $contact, 'message' => __('Contact created', 'wprcb')]);
+        return new WP_REST_Response(['message' => __('Contact created', 'wprcb')]);
     }
 
     public function show(WP_REST_Request $request)
     {
-        $contact = ModelsContact::find($request->get_param('id'));
+        $contact = DB::table('wprcb_contact_book')->where('id', $request->get_param('id'))->first();
 
         if (!$contact) {
-            return new WP_REST_Response(['message'  => __('Contact not found', 'wprcb')]);
+            return new WP_REST_Response(['message'  => __('Contact not found', 'wprcb')], 404);
         }
 
         return new WP_REST_Response(['contact'  => $contact]);
@@ -91,10 +96,33 @@ class Contact extends WP_REST_Controller
 
     public function update(WP_REST_Request $request)
     {
+
+        $contact = DB::table('wprcb_contact_book')->where('id', $request->get_param('id'))->first();
+
+        if (!$contact) {
+            return new WP_REST_Response(['message'  => __('Contact not found', 'wprcb')], 404);
+        }
+
+        $data = json_decode($request->get_body());
+
+        DB::table('wprcb_contact_book')->where('id', $request->get_param('id'))->update([
+            'name'      => $data->name,
+            'email'     => $data->email,
+            'phone'     => $data->phone,
+            'address'   => $data->address
+        ]);
+
+        return new WP_REST_Response(['message'  => __('Contact updated', 'wprcb')]);
     }
 
     public function destroy(WP_REST_Request $request)
     {
+        $contact = DB::table('wprcb_contact_book')->where('id', $request->get_param('id'))->delete();
+        if (!$contact) {
+            return new WP_REST_Response(['message'  => __('Contact not found', 'wprcb')], 404);
+        }
+
+        return new WP_REST_Response(['message'  => __('Contact deleted', 'wprcb')]);
     }
 
     public function permissionCheck()
